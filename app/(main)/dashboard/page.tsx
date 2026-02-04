@@ -5,34 +5,41 @@ import { SubscriptionCard } from '@/components/ui/subscription-card'
 import { AuthButton } from '@/components/ui/auth-button'
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  try {
+    const supabase = await createClient()
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  const profile = await getProfile(user.id)
-
-  if (profile && !profile.onboarding_completed) {
-    redirect('/onboarding')
-  }
-
-  const subscriptions = await getSubscriptions(user.id)
-
-  const totalMonthly = subscriptions.reduce((sum, sub) => {
-    if (sub.billing_period === 'monthly') {
-      return sum + sub.amount
-    } else if (sub.billing_period === 'yearly') {
-      return sum + sub.amount / 12
-    } else if (sub.billing_period === 'weekly') {
-      return sum + sub.amount * 4
-    } else {
-      return sum + sub.amount * 30
+    if (authError) {
+      console.error('Auth error:', authError.message)
+      redirect('/login')
     }
-  }, 0)
+
+    if (!user) {
+      redirect('/login')
+    }
+
+    const profile = await getProfile(user.id)
+
+    if (profile && !profile.onboarding_completed) {
+      redirect('/onboarding')
+    }
+
+    const subscriptions = await getSubscriptions(user.id)
+
+    const totalMonthly = subscriptions.reduce((sum, sub) => {
+      if (sub.billing_period === 'monthly') {
+        return sum + sub.amount
+      } else if (sub.billing_period === 'yearly') {
+        return sum + sub.amount / 12
+      } else if (sub.billing_period === 'weekly') {
+        return sum + sub.amount * 4
+      } else {
+        return sum + sub.amount * 30
+      }
+    }, 0)
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -80,4 +87,8 @@ export default async function DashboardPage() {
       </div>
     </div>
   )
+  } catch (error) {
+    console.error('Error in DashboardPage:', error)
+    redirect('/login')
+  }
 }

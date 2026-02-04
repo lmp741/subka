@@ -9,34 +9,46 @@ type Subscription = Database['public']['Tables']['subscriptions']['Row']
 type SubscriptionInsert = Database['public']['Tables']['subscriptions']['Insert']
 
 export async function getProfile(userId: string): Promise<Profile | null> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single()
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single()
 
-  if (error) {
+    if (error) {
+      console.error('Error fetching profile:', error.message)
+      return null
+    }
+
+    return data
+  } catch (error) {
+    console.error('Error in getProfile:', error)
     return null
   }
-
-  return data
 }
 
 export async function getSubscriptions(userId: string): Promise<Subscription[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('subscriptions')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('is_active', true)
-    .order('next_billing_date', { ascending: true })
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .order('next_billing_date', { ascending: true })
 
-  if (error) {
+    if (error) {
+      console.error('Error fetching subscriptions:', error.message)
+      return []
+    }
+
+    return data || []
+  } catch (error) {
+    console.error('Error in getSubscriptions:', error)
     return []
   }
-
-  return data || []
 }
 
 export async function createSubscription(
