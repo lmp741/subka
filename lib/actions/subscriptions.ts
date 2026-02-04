@@ -85,7 +85,7 @@ export async function updateSubscription(
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('subscriptions')
-    .update(updates)
+    .update(updates as any)
     .eq('id', subscriptionId)
     .select()
     .single()

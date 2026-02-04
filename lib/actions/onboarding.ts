@@ -94,7 +94,7 @@ export async function saveOnboardingResponses(
   // Обновляем профиль - отмечаем онбординг как завершенный
   const { error: profileError } = await supabase
     .from('profiles')
-    .update({ onboarding_completed: true })
+    .update({ onboarding_completed: true } as any)
     .eq('id', user.id)
 
   if (profileError) {
