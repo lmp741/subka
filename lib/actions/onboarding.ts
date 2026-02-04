@@ -51,9 +51,10 @@ export async function saveOnboardingResponses(
     services: r.services,
   }))
 
+  // @ts-expect-error - Supabase type inference issue
   const { error: onboardingError } = await supabase
     .from('onboarding_responses')
-    .insert(onboardingData as any)
+    .insert(onboardingData)
 
   if (onboardingError) {
     return { error: onboardingError.message }
@@ -82,9 +83,10 @@ export async function saveOnboardingResponses(
     })
 
   if (subscriptionsToInsert.length > 0) {
+    // @ts-expect-error - Supabase type inference issue
     const { error: subscriptionsError } = await supabase
       .from('subscriptions')
-      .insert(subscriptionsToInsert as any)
+      .insert(subscriptionsToInsert)
 
     if (subscriptionsError) {
       return { error: subscriptionsError.message }
@@ -92,9 +94,10 @@ export async function saveOnboardingResponses(
   }
 
   // Обновляем профиль - отмечаем онбординг как завершенный
+  // @ts-expect-error - Supabase type inference issue
   const { error: profileError } = await supabase
     .from('profiles')
-    .update({ onboarding_completed: true } as any)
+    .update({ onboarding_completed: true })
     .eq('id', user.id)
 
   if (profileError) {
