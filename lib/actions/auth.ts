@@ -3,6 +3,9 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { Database } from '@/types/database'
+
+type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
 
 export async function signIn(email: string, password: string) {
   const supabase = await createClient()
@@ -39,12 +42,13 @@ export async function signUp(email: string, password: string, fullName?: string)
 
   if (data.user) {
     // Создаем профиль пользователя
-    await supabase.from('profiles').insert({
+    const profileData: ProfileInsert = {
       id: data.user.id,
       email: data.user.email!,
       full_name: fullName || null,
       onboarding_completed: false,
-    })
+    }
+    await supabase.from('profiles').insert(profileData)
   }
 
   revalidatePath('/', 'layout')

@@ -6,6 +6,7 @@ import { Database } from '@/types/database'
 
 type Profile = Database['public']['Tables']['profiles']['Row']
 type Subscription = Database['public']['Tables']['subscriptions']['Row']
+type SubscriptionInsert = Database['public']['Tables']['subscriptions']['Insert']
 
 export async function getProfile(userId: string): Promise<Profile | null> {
   const supabase = await createClient()
@@ -50,13 +51,14 @@ export async function createSubscription(
   }
 ) {
   const supabase = await createClient()
+  const subscriptionData: SubscriptionInsert = {
+    user_id: userId,
+    ...subscription,
+    is_active: true,
+  }
   const { data, error } = await supabase
     .from('subscriptions')
-    .insert({
-      user_id: userId,
-      ...subscription,
-      is_active: true,
-    })
+    .insert(subscriptionData)
     .select()
     .single()
 

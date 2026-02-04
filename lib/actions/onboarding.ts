@@ -3,6 +3,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { Database } from '@/types/database'
+
+type OnboardingResponseInsert = Database['public']['Tables']['onboarding_responses']['Insert']
+type SubscriptionInsert = Database['public']['Tables']['subscriptions']['Insert']
 
 const PREDEFINED_SUBSCRIPTIONS: Record<
   string,
@@ -41,7 +45,7 @@ export async function saveOnboardingResponses(
   }
 
   // Сохраняем ответы онбординга
-  const onboardingData = responses.map((r) => ({
+  const onboardingData: OnboardingResponseInsert[] = responses.map((r) => ({
     user_id: user.id,
     category: r.category,
     services: r.services,
@@ -60,7 +64,7 @@ export async function saveOnboardingResponses(
   nextPaymentDate.setDate(nextPaymentDate.getDate() + 30)
   const nextPaymentDateString = nextPaymentDate.toISOString().split('T')[0]
 
-  const subscriptionsToInsert = responses
+  const subscriptionsToInsert: SubscriptionInsert[] = responses
     .flatMap((r) => r.services)
     .filter((name) => PREDEFINED_SUBSCRIPTIONS[name])
     .map((name) => {
