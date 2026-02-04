@@ -58,7 +58,7 @@ export async function createSubscription(
   }
   const { data, error } = await supabase
     .from('subscriptions')
-    .insert(subscriptionData)
+    .insert([subscriptionData] as any)
     .select()
     .single()
 

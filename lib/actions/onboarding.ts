@@ -53,7 +53,7 @@ export async function saveOnboardingResponses(
 
   const { error: onboardingError } = await supabase
     .from('onboarding_responses')
-    .insert(onboardingData)
+    .insert(onboardingData as any)
 
   if (onboardingError) {
     return { error: onboardingError.message }
@@ -84,7 +84,7 @@ export async function saveOnboardingResponses(
   if (subscriptionsToInsert.length > 0) {
     const { error: subscriptionsError } = await supabase
       .from('subscriptions')
-      .insert(subscriptionsToInsert)
+      .insert(subscriptionsToInsert as any)
 
     if (subscriptionsError) {
       return { error: subscriptionsError.message }

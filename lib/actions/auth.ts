@@ -48,7 +48,13 @@ export async function signUp(email: string, password: string, fullName?: string)
       full_name: fullName || null,
       onboarding_completed: false,
     }
-    await supabase.from('profiles').insert([profileData])
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .insert(profileData as any)
+    
+    if (profileError) {
+      console.error('Error creating profile:', profileError)
+    }
   }
 
   revalidatePath('/', 'layout')
