@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { saveOnboardingResponses } from '@/lib/actions/onboarding'
 
 const CATEGORIES = [
@@ -56,7 +56,7 @@ export function OnboardingForm() {
     })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
     setLoading(true)

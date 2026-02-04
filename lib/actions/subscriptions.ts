@@ -2,8 +2,12 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { Database } from '@/types/database'
 
-export async function getProfile(userId: string) {
+type Profile = Database['public']['Tables']['profiles']['Row']
+type Subscription = Database['public']['Tables']['subscriptions']['Row']
+
+export async function getProfile(userId: string): Promise<Profile | null> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('profiles')
@@ -18,7 +22,7 @@ export async function getProfile(userId: string) {
   return data
 }
 
-export async function getSubscriptions(userId: string) {
+export async function getSubscriptions(userId: string): Promise<Subscription[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('subscriptions')
@@ -31,7 +35,7 @@ export async function getSubscriptions(userId: string) {
     return []
   }
 
-  return data
+  return data || []
 }
 
 export async function createSubscription(
