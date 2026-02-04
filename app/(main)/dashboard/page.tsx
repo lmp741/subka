@@ -4,6 +4,8 @@ import { getProfile, getSubscriptions } from '@/lib/actions/subscriptions'
 import { SubscriptionCard } from '@/components/ui/subscription-card'
 import { AuthButton } from '@/components/ui/auth-button'
 
+export const dynamic = 'force-dynamic'
+
 export default async function DashboardPage() {
   try {
     const supabase = await createClient()
