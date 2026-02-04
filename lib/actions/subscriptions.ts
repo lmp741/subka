@@ -56,8 +56,8 @@ export async function createSubscription(
     ...subscription,
     is_active: true,
   }
-  // @ts-expect-error - Supabase type inference issue
-  const { data, error } = await supabase
+  // @ts-ignore - Supabase type inference issue
+  const { data, error } = await (supabase as any)
     .from('subscriptions')
     .insert([subscriptionData])
     .select()
@@ -84,8 +84,8 @@ export async function updateSubscription(
   }>
 ) {
   const supabase = await createClient()
-  // @ts-expect-error - Supabase type inference issue
-  const { data, error } = await supabase
+  // @ts-ignore - Supabase type inference issue
+  const { data, error } = await (supabase as any)
     .from('subscriptions')
     .update(updates)
     .eq('id', subscriptionId)

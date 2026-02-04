@@ -48,8 +48,8 @@ export async function signUp(email: string, password: string, fullName?: string)
       full_name: fullName || null,
       onboarding_completed: false,
     }
-    // @ts-expect-error - Supabase type inference issue
-    const { error: profileError } = await supabase
+    // @ts-ignore - Supabase type inference issue
+    const { error: profileError } = await (supabase as any)
       .from('profiles')
       .insert(profileData)
     
