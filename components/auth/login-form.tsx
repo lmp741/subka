@@ -1,11 +1,9 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
 import { signIn, signUp } from '@/lib/actions/auth'
 
 export function LoginForm() {
-  const router = useRouter()
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -31,7 +29,7 @@ export function LoginForm() {
         setLoading(false)
       } else if (result?.success) {
         // Небольшая задержка для установки cookies
-        await new Promise((resolve) => setTimeout(resolve, 100))
+        await new Promise((resolve) => setTimeout(resolve, 500))
         // Используем window.location для полной перезагрузки страницы
         // чтобы гарантировать обновление сессии
         window.location.href = '/dashboard'
