@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
+import { useRouter } from 'next/navigation'
 import { signIn, signUp } from '@/lib/actions/auth'
 
 export function LoginForm() {
+  const router = useRouter()
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -21,16 +23,23 @@ export function LoginForm() {
         const result = await signUp(email, password, fullName)
         if (result?.error) {
           setError(result.error)
+          setLoading(false)
+        } else if (result?.success) {
+          router.push('/dashboard')
+          router.refresh()
         }
       } else {
         const result = await signIn(email, password)
         if (result?.error) {
           setError(result.error)
+          setLoading(false)
+        } else if (result?.success) {
+          router.push('/dashboard')
+          router.refresh()
         }
       }
     } catch (err) {
       setError('Произошла ошибка')
-    } finally {
       setLoading(false)
     }
   }
