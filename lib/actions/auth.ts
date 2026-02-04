@@ -48,7 +48,7 @@ export async function signUp(email: string, password: string, fullName?: string)
       full_name: fullName || null,
       onboarding_completed: false,
     }
-    await supabase.from('profiles').insert(profileData)
+    await supabase.from('profiles').insert([profileData])
   }
 
   revalidatePath('/', 'layout')
