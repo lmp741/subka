@@ -19,24 +19,22 @@ export function LoginForm() {
     setLoading(true)
 
     try {
+      let result
       if (isSignUp) {
-        const result = await signUp(email, password, fullName)
-        if (result?.error) {
-          setError(result.error)
-          setLoading(false)
-        } else if (result?.success) {
-          router.push('/dashboard')
-          router.refresh()
-        }
+        result = await signUp(email, password, fullName)
       } else {
-        const result = await signIn(email, password)
-        if (result?.error) {
-          setError(result.error)
-          setLoading(false)
-        } else if (result?.success) {
-          router.push('/dashboard')
-          router.refresh()
-        }
+        result = await signIn(email, password)
+      }
+
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+      } else if (result?.success) {
+        // Небольшая задержка для установки cookies
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        // Используем window.location для полной перезагрузки страницы
+        // чтобы гарантировать обновление сессии
+        window.location.href = '/dashboard'
       }
     } catch (err) {
       setError('Произошла ошибка')
